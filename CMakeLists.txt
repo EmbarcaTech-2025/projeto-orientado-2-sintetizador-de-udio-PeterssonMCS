@@ -15,9 +15,9 @@ if(WIN32)
 else()
     set(USERHOME $ENV{HOME})
 endif()
-set(sdkVersion 2.1.1)
-set(toolchainVersion 14_2_Rel1)
-set(picotoolVersion 2.1.1)
+set(sdkVersion 2.1.0)
+set(toolchainVersion 13_3_Rel1)
+set(picotoolVersion 2.1.0)
 set(picoVscode ${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
 if (EXISTS ${picoVscode})
     include(${picoVscode})
@@ -28,42 +28,51 @@ set(PICO_BOARD pico_w CACHE STRING "Board type")
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
 
-project(synth_audio C CXX ASM)
+project(audio_sinthesizer C CXX ASM)
 
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable( synth_audio
-  main.c
-)
+add_executable(audio_sinthesizer 
+                audio_sinthesizer.c
+                pOS.c
+                hal/hardware/gpio/gpio.c 
+                hal/hardware/timer/timer.c 
+                hal/hardware/i2c/i2c.c 
+                hal/hardware/adc/adc.c 
+                hal/hardware/pwm/pwm.c
+                hal_def.c 
+                hal/led/led.c
+                hal/buzzer/buzzer.c
+                hal/display/driver1306.c
+                hal/display/font.c)
 
-pico_set_program_name(synth_audio "synth_audio")
-pico_set_program_version(synth_audio "0.1")
+pico_set_program_name(audio_sinthesizer "audio_sinthesizer")
+pico_set_program_version(audio_sinthesizer "0.1")
 
 # Modify the below lines to enable/disable output over UART/USB
-pico_enable_stdio_uart(synth_audio 0)
-pico_enable_stdio_usb(synth_audio 1)
+pico_enable_stdio_uart(audio_sinthesizer 0)
+pico_enable_stdio_usb(audio_sinthesizer 1)
 
 # Add the standard library to the build
-target_link_libraries(synth_audio
-        # Biblioteca padrão do Pico SDK, que fornece funções básicas para o RP2040 (GPIO, temporizadores, UART, etc.).
-        pico_stdlib
-        )
+target_link_libraries(audio_sinthesizer
+        pico_stdlib 
+        hardware_i2c 
+        hardware_adc
+        hardware_pwm
+        hardware_dma)
 
 # Add the standard include files to the build
-target_include_directories(synth_audio PRIVATE
+target_include_directories(audio_sinthesizer PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
-        ${CMAKE_CURRENT_LIST_DIR}/include
 )
 
 # Add any user requested libraries
-target_link_libraries(synth_audio 
-        hardware_adc
-        hardware_dma
-        hardware_pwm
-)
+target_link_libraries(audio_sinthesizer 
+        
+        )
 
-pico_add_extra_outputs(synth_audio)
+pico_add_extra_outputs(audio_sinthesizer)
 

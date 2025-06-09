@@ -1,20 +1,31 @@
+# Final Project of Embarcatech
 
-# Projetos de Sistemas Embarcados - EmbarcaTech 2025
+This project contains a modular approach for a embbedded device that tracks temperature and umidity inside a bee hive,
+as well a anti-theft approach.
 
-Autor: **Insira Seu Nome**
+## Features
 
-Curso: Residência Tecnológica em Sistemas Embarcados
+- Measures internal temperature (°C)  
+- Measures humidity (%RH)
+- Indicator of bee hive Status
+- Anti theft alarm
+---
 
-Instituição: EmbarcaTech - HBr
+## Hardware Components
 
-Campinas, ___ de 2025
+- **MCU**: Raspberry Pi Pico W (BitdogLab board)
+- **Temperature/Humidity Sensor**: AHT10
+- **Power Source**: Li-Ion battery with optional solar panel
+- **Temperature Controller**: 12V Fan
+- **Anti-Theft device**: Buzzer
+- **Indicator of bee hive health status**: RGB Led
 
 ---
 
-<!-- INSIRA O CONTEÚDO DO SEU README AQUI! -->
+## 🛠️ Firmware Features
 
----
-
-## 📜 Licença
-GNU GPL-3.0.
-
+- Written in C/C++ using VsCode with Raspberry Pi Pico Project extension 
+- Non preemptive RTOS
+- Non-blocking sensor read routines  
+- Periodic or on-demand data readings
+- Optional real-time clock (RTC) for timestamped data
