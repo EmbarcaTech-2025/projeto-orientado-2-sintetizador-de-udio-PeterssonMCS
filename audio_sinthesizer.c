@@ -5,9 +5,9 @@
 /*********************************
 *      DEFINITIONS SECTION
 *********************************/
-#define FREQUENCY 8000
+#define FREQUENCY 20000
 #define PERIOD_US 1000000/FREQUENCY
-#define SAMPLES 2*FREQUENCY
+#define SAMPLES 5*FREQUENCY
 
 typedef enum{
     IDLE,
@@ -24,11 +24,6 @@ uint16_t my_buffer[SAMPLES];
 /*********************************
 *      TASKS SECTION
 *********************************/
-void Task_Display()
-{
-    D1306_Show( GET_POINTER(D1306,OLED) );
-}
-
 void Task_Buttons()
 {
     if( gState == IDLE )
@@ -46,26 +41,11 @@ void Task_Buttons()
     }
 }
 
-void Task_LED()
-{
-    switch( gState )
-    {
-        case IDLE:
-            LED_SetColor(GET_POINTER(LED,RGB), 0.0, 0.0 , 0.0 );
-        break;
-        case RECORDING:
-            LED_SetColor(GET_POINTER(LED,RGB), 0.1, 0.0 , 0.0 );
-        break;
-        case PLAYING:
-            LED_SetColor(GET_POINTER(LED,RGB), 0.0, 0.1 , 0.0 );
-        break;
-    }
-}
-
 void Task_Recording()
 {
     if( gState == RECORDING )
     {
+        LED_SetColor(GET_POINTER(LED,RGB), 0.1, 0.0 , 0.0 );
         int index = 0;
         while( index < SAMPLES )
         {
@@ -73,6 +53,7 @@ void Task_Recording()
             sleep_us(PERIOD_US);
         }
         printf("Recording OFF\n");
+        LED_SetColor(GET_POINTER(LED,RGB), 0.0, 0.0 , 0.0 );
         gState = IDLE;
     }
 }
@@ -81,6 +62,7 @@ void Task_Playing()
 {
     if( gState == PLAYING )
     {
+        LED_SetColor(GET_POINTER(LED,RGB), 0.0, 0.0 , 0.1 );
         int index = 0;
         PWM_Enable( GET_POINTER(PWM,BUZZER_B));
         while( index < SAMPLES )
@@ -90,6 +72,7 @@ void Task_Playing()
         }
         PWM_Disable(GET_POINTER(PWM,BUZZER_B));
         printf("Playing OFF\n");
+        LED_SetColor(GET_POINTER(LED,RGB), 0.0, 0.0 , 0.0 );
         gState = IDLE;
     }
 }
@@ -102,10 +85,9 @@ int main()
     stdio_init_all();
 
     HAL_Init();
+    PWM_Disable(GET_POINTER(PWM,BUZZER_B));
 
-   // OS_CreateTask( 100 , Task_Display );
     OS_CreateTask( 100 , Task_Buttons );
-    OS_CreateTask( 100 , Task_LED );
     OS_CreateTask( 100 , Task_Recording);
     OS_CreateTask( 100 , Task_Playing );
 

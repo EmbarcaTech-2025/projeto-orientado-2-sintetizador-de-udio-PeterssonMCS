@@ -20,7 +20,6 @@ typedef struct
     uint8_t pin;
     uint16_t period;
     float divider;
-    uint16_t step;
     uint16_t duty;
 }PWM_CONFIG_t;
 

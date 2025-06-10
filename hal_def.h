@@ -36,12 +36,10 @@
     MACRO( LED )                \
     MACRO( PWM )             \
     MACRO( GPIO )               \
-    MACRO( D1306 )              \
     MACRO( ADC )
 
 #define HAL_LIST( MACRO )     \
     MACRO( TIMER , OS )       \
-    MACRO( D1306 , OLED )     \
     MACRO( GPIO, BUTTON_A )   \
     MACRO( GPIO, BUTTON_B )   \
     MACRO( LED , RGB )        \
